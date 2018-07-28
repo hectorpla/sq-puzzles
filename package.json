@@ -5,9 +5,11 @@
   "dependencies": {
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
-    "react-scripts-ts": "2.16.0"
+    "react-scripts-ts": "2.16.0",
+    "ts-log-debug": "^4.0.4"
   },
   "scripts": {
+    "lint": "tslint --fix --project tsconfig.json",
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",

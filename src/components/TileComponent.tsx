@@ -1,12 +1,16 @@
 import * as React from 'react';
+// import { $log } from 'ts-log-debug';
 import { Tile } from '../types';
+
+// $log.name = 'component: tile';
+// $log.level = 'debug';
 
 export interface Props {
   tile: Tile; // model
-  top: number;
-  left: number;
+  // top: number;
+  // left: number;
   dimension: number;
-  onClick: () => void;
+  // onClick: () => void;
 }
 
 
@@ -22,11 +26,23 @@ class TileComponent extends React.Component<Props> {
   }
 
   public render() {
+    const handleClick = this.handleClick.bind(this);
     return (
-      <div style={this.tileStyle}>
+      <div style={this.tileStyle} onClick={handleClick}>
         {this.props.tile.id}
       </div>
     )
+  }
+
+  private handleClick() {
+    console.debug(this.props);
+    const { tile } = this.props;
+    const originalPosition = tile.location;
+    const afterPosition = tile.move();
+    if (originalPosition === afterPosition) {
+      return;
+    }
+    throw Error('on implemented');
   }
 }
 

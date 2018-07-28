@@ -11,7 +11,7 @@ class BoardModel implements Board {
     this.tiles = [{
       id: 'empty',
       location: 0,
-      move: function() {
+      move() {
         return this.location;
       }
     }];
@@ -23,7 +23,7 @@ class BoardModel implements Board {
       this.tiles.push({
         id: i,
         location: i,
-        move: function() {
+        move() {
           return thisBoard.move(this.location);
         }
       })
