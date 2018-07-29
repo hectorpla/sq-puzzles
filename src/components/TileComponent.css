@@ -1,0 +1,7 @@
+.tile {
+  /* display: flex;
+  align-content: stretch;
+  justify-content: space-around; */
+
+  position: absolute;
+}

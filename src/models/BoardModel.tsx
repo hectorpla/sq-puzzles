@@ -5,9 +5,10 @@ class BoardModel implements Board {
   public dimensions: number;
   public tiles: Tile[];
   public emptyTileLocation: number;
-  public matchedPlaces: number;
+  public matchedPlaces: number = 0;
   
   constructor(dimensions: number) {
+    this.dimensions = dimensions;
     this.tiles = [{
       id: 'empty',
       location: 0,
