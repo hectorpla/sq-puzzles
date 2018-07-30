@@ -1,7 +1,7 @@
 export interface Game {
   board: Board;
   readonly dimensions: number;
-  readonly movementCount: number;
+  movementCount: number;
   movementHistory?: any; // not considered yet
   reset: () => void;
 }
@@ -17,6 +17,7 @@ export interface Board {
     
   */
   isFinished: () => boolean;
+  shuffle: () => void;
 }
 
 export interface Tile {

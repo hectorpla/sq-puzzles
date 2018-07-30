@@ -11,7 +11,25 @@ export const getNewGame: GameInitializor = (dimensions: number) => {
     dimensions,
     movementCount: 0,
     reset() {
-      throw Error('not implemented');
+      this.board.shuffle();
+      this.movementCount = 0;
     }
   }
+}
+
+/**
+ * Shuffles array in place.
+ * @param {Array} a items An array containing the items.
+ * form stack-overflow
+ */
+export const shuffle = (array: object[]) => {
+  let i;
+  let j;
+  for (i = array.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    const x = array[i];
+    array[i] = array[j];
+    array[j] = x;
+  }
+  return array;
 }

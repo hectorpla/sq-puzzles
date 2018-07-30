@@ -37,29 +37,36 @@ class TileComponent extends React.Component<Props> {
     const row = Math.floor(location / rowItems);
     const col = location % rowItems;
     const top = row * dimension;
-    const left = col * dimension; 
+    const left = col * dimension;
 
-    this.tileStyle.top = top + 'px';
-    this.tileStyle.left = left + 'px';
+    this.tileStyle = {
+      ...this.tileStyle,
+      top: top + 'px',
+      left: left + 'px'
+    }
     console.debug(`square ${this.props.tile.id}: location ${location}, top ${top}, left: ${left}`);
 
     const handleClick = this.handleClick.bind(this);
     return (
-      <div className={this.classNames} style={this.tileStyle} onClick={handleClick}>
-        <span>{this.props.tile.id}</span>
+      <div className={this.classNames} style={this.tileStyle}
+        onClick={handleClick}>
+        <span>
+          {typeof this.props.tile.id === 'string' ? "" : this.props.tile.id}
+        </span>
       </div>
     )
   }
 
   private handleClick() {
-    console.debug(this.props);
+    console.log(this.props);
     const { tile } = this.props;
     const originalPosition = tile.location;
     const afterPosition = tile.move();
+    console.log(originalPosition, afterPosition);
     if (originalPosition === afterPosition) {
       return;
     }
-    throw Error('on implemented');
+    // ? notify parent?
   }
 }
 
