@@ -44,7 +44,7 @@ class TileComponent extends React.Component<Props> {
       top: top + 'px',
       left: left + 'px'
     }
-    console.debug(`square ${this.props.tile.id}: location ${location}, top ${top}, left: ${left}`);
+    // console.debug(`square ${this.props.tile.id}: location ${location}, top ${top}, left: ${left}`);
 
     const handleClick = this.handleClick.bind(this);
     return (
@@ -58,11 +58,9 @@ class TileComponent extends React.Component<Props> {
   }
 
   private handleClick() {
-    console.log(this.props);
     const { tile } = this.props;
     const originalPosition = tile.location;
     const afterPosition = tile.move();
-    console.log(originalPosition, afterPosition);
     if (originalPosition === afterPosition) {
       return;
     }

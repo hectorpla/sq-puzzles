@@ -5,7 +5,6 @@ class BoardModel implements Board {
   // ? public? interface inforces that
   public dimensions: number;
   public tiles: Tile[];
-  public emptyTileLocation: number;
   public matchedPlaces: number = 0;
 
   constructor(dimensions: number) {
@@ -17,7 +16,6 @@ class BoardModel implements Board {
         return this.location;
       }
     }];
-    this.emptyTileLocation = 0;
 
     const size = dimensions * dimensions;
     const thisBoard = this;
@@ -30,6 +28,7 @@ class BoardModel implements Board {
         },
       })
     }
+    this.setToFinishState();
   }
 
   /**
@@ -57,7 +56,7 @@ class BoardModel implements Board {
   /**
    * check if the game is finshed
    */
-  public isFinished() {
+  public isFinished(): boolean {
     const d = this.dimensions;
     return this.matchedPlaces === d * d;
   }
@@ -72,14 +71,28 @@ class BoardModel implements Board {
     while (countInversions(this.getOrder()) % 2 === 1) {
       shuffle(this.tiles);
     }
-      
+    this.syncLocations();
+  }
+
+  public setToFinishState() {
+    this.tiles.sort((a, b) => {
+      if (a.id === 'empty') { return 1 };
+      if (b.id === 'empty') { return -1 };
+      return a.id > b.id ? 1 : 0;
+    })
+    this.syncLocations();
+  }
+
+  /**
+   * should be called after swap operations in the tile array
+   */
+  private syncLocations() {
     this.matchedPlaces = 0;
     this.tiles.forEach((tile, i) => {
       tile.location = i;
       this.matchedPlaces += this.isMatched(i) ? 1 : 0;
     });
   }
-
 
   private locationToCell(location: number): [number, number] {
     const d = this.dimensions;

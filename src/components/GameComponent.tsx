@@ -33,14 +33,17 @@ class GameComponent extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    this.resetGame();
+    // do nothing
+    // this.resetGame();
   }
 
   public handleGameBoardChagne() {
-    this.setState(this.state);
-    if (this.state.game.board.isFinished()) {
-      alert('Congrad! you finisehd');
-    }
+    this.setState(this.state, () => {
+      // async: 
+      if (this.state.game.board.isFinished()) {
+        alert('Congrad! you finisehd');
+      }
+    });
   }
 
   // TODO: center the game board; failed 

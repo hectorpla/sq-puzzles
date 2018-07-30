@@ -10,8 +10,8 @@ export interface Game {
 export interface Board {
   dimensions: number;
   tiles: Tile[];
-  emptyTileLocation: number;
-  matchedPlaces: number;
+  // emptyTileLocation: number;
+  readonly matchedPlaces: number;
   move: (location: number) => number;
   /*
     
