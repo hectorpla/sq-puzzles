@@ -19,8 +19,8 @@ export const getNewGame: GameInitializor = (dimensions: number) => {
 
 /**
  * Shuffles array in place.
- * @param {Array} a items An array containing the items.
- * form stack-overflow
+ * @param {Array} array items An array containing the items.
+ * from stack-overflow
  */
 export const shuffle = (array: object[]) => {
   let i;
@@ -32,4 +32,22 @@ export const shuffle = (array: object[]) => {
     array[j] = x;
   }
   return array;
+}
+
+/**
+ * Count inversions of an arrangement of tiles
+ * @param {number[]} order
+ * naive solution, binary search can improve
+ */
+export const countInversions = (order: number[]) => {
+  let count = 0;
+  for (let i = 0; i < order.length; i++) {
+    for (let j = i + 1; j < order.length; j++) {
+      if (order[i] && order[j] && order[i] > order[j]) {
+        count++;
+      }
+    }
+  }
+  console.log(count);
+  return count;
 }

@@ -1,5 +1,5 @@
 import { Board, Tile } from '../types';
-import { shuffle } from '../utils';
+import { countInversions, shuffle } from '../utils';
 
 class BoardModel implements Board {
   // ? public? interface inforces that
@@ -38,7 +38,6 @@ class BoardModel implements Board {
   public move(location: number) {
     const [row, col] = this.locationToCell(location);
 
-    // ! value zero will not be selected
     let newLocation =
       this.isCellEmpty(row - 1, col)
       || this.isCellEmpty(row + 1, col)
@@ -59,21 +58,28 @@ class BoardModel implements Board {
    * check if the game is finshed
    */
   public isFinished() {
-    throw Error('not implemented');
-    return false;
+    const d = this.dimensions;
+    return this.matchedPlaces === d * d;
   }
 
   /**
    * shuffle the postions of tiles
+   * TODO: naive inprementation, not efficent but enough?
+   * ! only suit for 8-puzzle, case for 15-puzzle is much complicated 
    */
   public shuffle() {
     shuffle(this.tiles);
+    while (countInversions(this.getOrder()) % 2 === 1) {
+      shuffle(this.tiles);
+    }
+      
     this.matchedPlaces = 0;
     this.tiles.forEach((tile, i) => {
       tile.location = i;
       this.matchedPlaces += this.isMatched(i) ? 1 : 0;
     });
   }
+
 
   private locationToCell(location: number): [number, number] {
     const d = this.dimensions;
@@ -93,16 +99,20 @@ class BoardModel implements Board {
     const tiles = this.tiles;
     const location = this.cellToLocation(row, col);
 
-    console.log('isCellEmpty', row, col, tiles[location]);
     if (row < 0 || row >= d || col < 0 || col >= d || tiles[location].id !== 'empty') {
       return undefined;
     }
     return location + 1;
   }
 
+  private getOrder(): number[] {
+    // const last = this.dimensions * this.dimensions - 1;
+    return this.tiles.map(tile => tile.id === 'empty' ? 0 : tile.id);
+  }
+
   // TODO: test
   private isMatched(pos: number) {
-    console.log(this.tiles[pos]);
+    // console.log(this.tiles[pos]);
     const { id, location } = this.tiles[pos];
     const d = this.dimensions;
     return id === location + 1
