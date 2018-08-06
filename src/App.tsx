@@ -6,7 +6,7 @@ class App extends React.Component {
   public render() {
     return (
       <div className="container">
-        <GameComponent dimensions={3} />
+        <GameComponent dimensions={4} />
       </div>
     );
   }

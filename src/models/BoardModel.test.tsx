@@ -11,7 +11,7 @@ function checkMatched(board: BoardModel) {
     }
     count += tile.id === tile.location + 1 ? 1 : 0;
   })
-  expect(board.matchedPlaces).toBe(count);
+  return expect(board.matchedPlaces).toBe(count);
 }
 
 describe('8-puzzle', () => {
@@ -81,16 +81,27 @@ describe('8-puzzle', () => {
   });
 
   it('5 random moves', () => {
-    for (let i = 0; i = 5; i++) {
+    for (let i = 0; i < 5; i++) {
       board.move(getRandomLocation());
-      checkMatched(board);
     }
-  })
+    checkMatched(board);
+  });
 
   it('20 random moves', () => {
-    for (let i = 0; i = 20; i++) {
+    for (let i = 0; i < 20; i++) {
       board.move(getRandomLocation());
       checkMatched(board);
     }
+  });
+
+  // TODO: tests solvable
+})
+
+describe('15-puzzle', () => {
+  const board = new BoardModel(4);
+
+  it('finshed state', () => {
+    expect(board.matchedPlaces).toBe(16);
+    expect(board.isFinished()).toBe(true);
   })
 })

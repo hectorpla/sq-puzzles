@@ -3,7 +3,7 @@ import { countInversions, shuffle } from '../utils';
 
 class BoardModel implements Board {
   // ? public? interface inforces that
-  public dimensions: number;
+  public readonly dimensions: number;
   public tiles: Tile[];
   public matchedPlaces: number = 0;
 
