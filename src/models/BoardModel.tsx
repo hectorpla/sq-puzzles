@@ -23,7 +23,7 @@ class BoardModel implements Board {
       this.tiles.push({
         id: i,
         location: i,
-        move() {
+        move() { // ? delegation in model
           return thisBoard.move(this.location);
         },
       })
@@ -78,7 +78,7 @@ class BoardModel implements Board {
     this.tiles.sort((a, b) => {
       if (a.id === 'empty') { return 1 };
       if (b.id === 'empty') { return -1 };
-      return a.id > b.id ? 1 : 0;
+      return a.id > b.id ? 1 : -1; // fixed: originally 1 : 0
     })
     this.syncLocations();
   }
