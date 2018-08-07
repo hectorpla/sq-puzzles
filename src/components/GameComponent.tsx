@@ -40,6 +40,7 @@ class GameComponent extends React.Component<Props, State> {
   public handleGameBoardChagne() {
     this.setState(this.state, () => {
       // async: 
+      // !bug: callback invoked before re-rendering
       if (this.state.game.board.isFinished()) {
         alert('Congrad! you finisehd');
       }
@@ -50,23 +51,29 @@ class GameComponent extends React.Component<Props, State> {
   public render() {
     const handleGameBoardChagne = this.handleGameBoardChagne.bind(this);
     const handleReset = this.resetGame.bind(this);
+    const dimensions = this.props.dimensions;
 
     return (
-      <div>
-        <div style={this.gamePanelStyle} className="game-board-panel brown lighten-1">
+      <div className="container">
+        <header>
+          <p className="center">{dimensions * dimensions - 1}-puzzle </p>
+        </header>
+        <section style={this.gamePanelStyle} className="game-board-panel brown lighten-1">
           <div className="center">
             <BoardComponent
               board={this.state.game.board}
               itemWidth={this.itemWidth}
-              onChange={handleGameBoardChagne}/>
+              onChange={handleGameBoardChagne} />
           </div>
-        </div>
-        <div className="center">
-          # matched tiles: {this.state.game.board.matchedPlaces}
-        </div>
-        <div className="control-panel center">
-          <button onClick={handleReset}>New Game</button>
-        </div>
+        </section>
+        <section>
+          <div className="center">
+            # matched tiles: {this.state.game.board.matchedPlaces}
+          </div>
+          <div className="control-panel center">
+            <button className="button" onClick={handleReset}>New Game</button>
+          </div>
+        </section>
       </div>
     )
   }

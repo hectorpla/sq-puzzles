@@ -20,11 +20,13 @@ class TileComponent extends React.Component<Props> {
 
     const { dimension } = this.props;
     const margin = 2;
-    const width = dimension - 2 * margin;
-    this.tileStyle = {
-      width: width + 'px',
-      height: width + 'px',
-      // padding: "",
+    const itemLength = dimension - 2 * margin;
+    this.tileStyle = { // implicit length unit: px
+      width: itemLength,
+      height: itemLength,
+      lineHeight: itemLength + 'px',
+      fontSize: 20,
+      // color: 'white',
       margin: `${margin}px ${margin}px ${margin}px ${margin}px`
     };
 
