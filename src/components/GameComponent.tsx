@@ -6,6 +6,7 @@ import './GameComponent.css';
 
 export interface Props {
   dimensions: number;
+  itemWidth?: number;
 }
 
 export interface State {
@@ -17,7 +18,7 @@ class GameComponent extends React.Component<Props, State> {
     game: getNewGame(this.props.dimensions)
   }
 
-  private itemWidth: number = 80;
+  private itemWidth: number = this.props.itemWidth || 80;
   private gamePanelStyle: React.CSSProperties;
 
   public constructor(props: Props) {
@@ -71,7 +72,7 @@ class GameComponent extends React.Component<Props, State> {
             # matched tiles: {this.state.game.board.matchedPlaces}
           </div>
           <div className="control-panel center">
-            <button className="button" onClick={handleReset}>New Game</button>
+            <button className="waves-effect waves-teal btn-flat" onClick={handleReset}>New Game</button>
           </div>
         </section>
       </div>

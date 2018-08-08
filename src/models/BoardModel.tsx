@@ -9,20 +9,21 @@ class BoardModel implements Board {
 
   constructor(dimensions: number) {
     this.dimensions = dimensions;
-    this.tiles = [{
-      id: 'empty',
-      location: 0,
-      move() {
-        return this.location;
-      }
-    }];
+    this.tiles = [];
 
     const size = dimensions * dimensions;
     const thisBoard = this;
-    for (let i = 1; i < size; i++) {
+    for (let i = 0; i < size; i++) {
       this.tiles.push({
-        id: i,
+        id: i < size - 1 ? i + 1 : 'empty',
         location: i,
+        getRow() {
+          console.log(this);
+          return thisBoard.getRow(this.location);
+        },
+        getCol() {
+          return thisBoard.getCol(this.location);
+        },
         move() { // ? delegation in model
           return thisBoard.move(this.location);
         },
@@ -51,6 +52,14 @@ class BoardModel implements Board {
 
     this.swap(location, newLocation);
     return newLocation;
+  }
+
+  public getRow(location: number) {
+    return this.locationToCell(location)[0];
+  }
+
+  public getCol(location: number) {
+    return this.locationToCell(location)[1];
   }
 
   /**

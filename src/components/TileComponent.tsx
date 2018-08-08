@@ -6,11 +6,9 @@ import './TileComponent.css';
 export interface Props {
   tile: Tile; // model
   dimension: number;
-  rowItems: number;
   color: string;
 }
 
-// TODO: bigger font and center align
 class TileComponent extends React.Component<Props> {
   private tileStyle: React.CSSProperties;
   private classNames: string = "tile";
@@ -34,17 +32,17 @@ class TileComponent extends React.Component<Props> {
   }
 
   public render() {
-    const { location } = this.props.tile;
-    const { dimension, rowItems } = this.props;
-    const row = Math.floor(location / rowItems);
-    const col = location % rowItems;
+    const tile = this.props.tile;
+    const { dimension } = this.props;
+    const row = tile.getRow();
+    const col = tile.getCol();
     const top = row * dimension;
     const left = col * dimension;
 
     this.tileStyle = {
       ...this.tileStyle,
-      top: top + 'px',
-      left: left + 'px'
+      top,
+      left
     }
     // console.debug(`square ${this.props.tile.id}: location ${location}, top ${top}, left: ${left}`);
 
@@ -53,7 +51,7 @@ class TileComponent extends React.Component<Props> {
       <div className={this.classNames} style={this.tileStyle}
         onClick={handleClick}>
         <span>
-          {typeof this.props.tile.id === 'string' ? "" : this.props.tile.id}
+          {this.props.tile.id === 'empty' ? "" : this.props.tile.id}
         </span>
       </div>
     )

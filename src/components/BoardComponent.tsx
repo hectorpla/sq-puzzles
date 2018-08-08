@@ -46,7 +46,6 @@ class BoardComponent extends React.Component<Props> {
           return (
             <TileComponent key={tile.id} tile={tile}
               dimension={this.props.itemWidth}
-              rowItems={this.props.board.dimensions}
               color={color} />
           )
         })}

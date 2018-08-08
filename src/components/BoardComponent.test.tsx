@@ -43,6 +43,7 @@ describe('<BoardComponent />', () => {
         expect(onChangeSpy.callCount).toBe(i + 1);
       })
     })
-    
+
+    // TODO: test tile change after click
   });
 });
