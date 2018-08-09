@@ -1,4 +1,7 @@
 .game-board {
+  position: relative;
   width: inherit;
   height: inherit;
+  margin-left: auto;
+  margin-right: auto;
 }

@@ -27,9 +27,7 @@ class GameComponent extends React.Component<Props, State> {
 
     const dimensions = this.props.dimensions;
     const size = this.itemWidth * dimensions;
-
     this.gamePanelStyle = {
-      width: size,
       height: size
     }
   }
@@ -53,7 +51,6 @@ class GameComponent extends React.Component<Props, State> {
     // console.log(this.state.game.board.tiles);
   }
 
-  // TODO: center the game board; failed 
   public render() {
     const handleGameBoardChagne = this.handleGameBoardChagne.bind(this);
     const handleReset = this.resetGame.bind(this);
@@ -64,7 +61,7 @@ class GameComponent extends React.Component<Props, State> {
         <header>
           <p className="center">{dimensions * dimensions - 1}-puzzle </p>
         </header>
-        <section style={this.gamePanelStyle} className="game-board-panel brown lighten-1">
+        <section style={this.gamePanelStyle} className="game-board-panel">
           <div className="center">
             <BoardComponent
               board={this.state.game.board}
@@ -73,12 +70,15 @@ class GameComponent extends React.Component<Props, State> {
           </div>
         </section>
         <section>
-          {/* TODO: animation for change */}
-          <div className="center">
-            # matched tiles: {this.state.game.board.matchedPlaces}
-          </div>
+          {/* TODO: animation for match changes */}
+
           <div className="control-panel center">
-            <button className="waves-effect waves-teal btn-flat" onClick={handleReset}>New Game</button>
+            <span className="card-panel blue-grey lighten-2">
+              # matched tiles: {this.state.game.board.matchedPlaces}
+            </span>
+            <span>
+              <button className="waves-effect teal btn" onClick={handleReset}>New Game</button>
+            </span>
           </div>
         </section>
       </div>

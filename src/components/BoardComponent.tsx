@@ -27,16 +27,20 @@ class BoardComponent extends React.Component<Props> {
   // TODO: responsive?
   private boardStyle: React.CSSProperties;
 
-  // public shouldComponentUpdate() {
-  //   // ? prevent update, left the tiles themselve control their own position
-  //   return false;
-  // }
+  public constructor(props: Props) {
+    super(props);
+    // TODO add horizontal padding
+    const width = props.itemWidth * props.board.dimensions;
+    this.boardStyle = {
+      width
+    }
+  }
 
   public render() {
     const handleClick = this.handleClick.bind(this);
     return (
       <div style={this.boardStyle}
-        className="center game-board">
+        className="game-board brown lighten-2">
         {this.props.board.tiles.map(tile => {
           let color = "";
           if (typeof tile.id === 'number') {

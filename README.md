@@ -6,8 +6,9 @@
 
 ## solution:
 1. move.js
-2. 
+2. two phrases for tile movement (1.animation, 2.react setState)
 
 # problems not yet solved
-[x] check finished before the view is rendered (wrong)
-[x] generate puzzles that are guranteed to be solvable (4 * 4)
+- [] check finished before the view is rendered (wrong)
+- [] generate puzzles that are guranteed to be solvable (4 * 4)
+
