@@ -73,6 +73,7 @@ class GameComponent extends React.Component<Props, State> {
           </div>
         </section>
         <section>
+          {/* TODO: animation for change */}
           <div className="center">
             # matched tiles: {this.state.game.board.matchedPlaces}
           </div>

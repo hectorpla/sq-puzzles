@@ -37,17 +37,6 @@ class TileComponent extends React.Component<Props> {
     this.classNames += ' ' + this.props.color;
   }
 
-  public componentWillUpdate() {
-    const [top, left] = this.getOffset();
-
-    this.tileStyle = {
-      ...this.tileStyle,
-      top,
-      left
-    }
-    console.log('comp update:', this.props.tile.id);
-  }
-
   public render() {
     const tile = this.props.tile;
     const [top, left] = this.getOffset();
@@ -92,9 +81,17 @@ class TileComponent extends React.Component<Props> {
     left *= dimension;
     top *= dimension;
     move('#' + this.domId)
+      .duration(200)
       .translate(left, top)
       .then(this.props.onMove) // ? work around for view updating
-      .end();
+      .end(() => {
+        // ! another work around to restore place after re-render
+        // ! problems happend when the duration is long
+        move('#' + this.domId)
+          .duration(0)
+          .to(0, 0)
+          .end();
+      });
   }
 
   /**
