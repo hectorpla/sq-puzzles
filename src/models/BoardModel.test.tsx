@@ -14,6 +14,17 @@ function checkMatched(board: BoardModel) {
   return expect(board.matchedPlaces).toBe(count);
 }
 
+function checkFinished(board: BoardModel) {
+  board.tiles.forEach((tile, i) => {
+    if (tile.id === 'empty') {
+      expect(tile.location).toBe(8);
+      return;
+    }
+    expect(tile.id).toBe(i + 1);
+  })
+  expect(board.isFinished()).toBe(true);
+}
+
 describe('8-puzzle', () => {
   const board = new BoardModel(3);
   const locations = [0, 1, 2, 3, 4, 5, 6, 7, 8];
@@ -33,19 +44,11 @@ describe('8-puzzle', () => {
 
   it('finished state of a game', () => {
     expect(board.dimensions).toBe(3);
-
-    board.tiles.forEach((tile, i) => {
-      if (tile.id === 'empty') {
-        expect(tile.location).toBe(8);
-        return;
-      }
-      expect(tile.id).toBe(i + 1);
-    })
-
+    checkFinished(board);
     expect(board.matchedPlaces).toBe(9);
-    expect(board.isFinished()).toBe(true);
   })
 
+  // only one test though
   it('invalid moves', () => {
     locations.forEach(i => {
       if (i === 5 || i === 7) { return };
@@ -73,6 +76,14 @@ describe('8-puzzle', () => {
     expect(board.isFinished()).toBe(false);
     expect(board.tiles[7].id).toBe('empty');
     expect(board.tiles[8].id).toBe(8);
+  });
+
+  it('two moves (7 -> 8, 8 -> 7) back to finished state', () => {
+    board.move(7);
+    expect(board.move(8)).toBe(7);
+    console.log(board.tiles);
+    checkFinished(board);
+    expect(board.matchedPlaces).toBe(9);
   });
 
   it('two moves (7 -> 8, 6 -> 7)', () => {

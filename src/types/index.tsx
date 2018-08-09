@@ -18,8 +18,10 @@ export interface Board {
   shuffle: () => void;
 }
 
+// TODO: consider class implementation instead of plain object
 export interface Tile {
   id: number | 'empty';
+  // ? the client should not know the internal location in the array
   location: number;
   move: () => number;
   getRow: () => number;

@@ -2,16 +2,21 @@ import * as React from 'react';
 import { Tile } from '../types';
 import './TileComponent.css';
 
+// import * as move from 'move-js';
+// ! mind name confliction in global scope
+import move from 'move-js';
 
 export interface Props {
   tile: Tile; // model
   dimension: number;
   color: string;
+  onMove: () => void;
 }
 
 class TileComponent extends React.Component<Props> {
   private tileStyle: React.CSSProperties;
   private classNames: string = "tile";
+  private domId = 'tile-' + this.props.tile.id;
 
   public constructor(prop: any) {
     super(prop);
@@ -24,20 +29,28 @@ class TileComponent extends React.Component<Props> {
       height: itemLength,
       lineHeight: itemLength + 'px',
       fontSize: 20,
-      // color: 'white',
-      margin: `${margin}px ${margin}px ${margin}px ${margin}px`
+      margin: `${margin}px ${margin}px ${margin}px ${margin}px`,
+      transform: 'none', // translate3d(0px, 0px, 0px)
+      WebkitTransform: 'none'
     };
 
     this.classNames += ' ' + this.props.color;
   }
 
+  public componentWillUpdate() {
+    const [top, left] = this.getOffset();
+
+    this.tileStyle = {
+      ...this.tileStyle,
+      top,
+      left
+    }
+    console.log('comp update:', this.props.tile.id);
+  }
+
   public render() {
     const tile = this.props.tile;
-    const { dimension } = this.props;
-    const row = tile.getRow();
-    const col = tile.getCol();
-    const top = row * dimension;
-    const left = col * dimension;
+    const [top, left] = this.getOffset();
 
     this.tileStyle = {
       ...this.tileStyle,
@@ -48,23 +61,62 @@ class TileComponent extends React.Component<Props> {
 
     const handleClick = this.handleClick.bind(this);
     return (
-      <div className={this.classNames} style={this.tileStyle}
+      <div id={this.domId} className={this.classNames} style={this.tileStyle}
         onClick={handleClick}>
         <span>
-          {this.props.tile.id === 'empty' ? "" : this.props.tile.id}
+          {tile.id === 'empty' ? "" : this.props.tile.id}
         </span>
       </div>
     )
   }
 
+  private getOffset(): [number, number] {
+    const tile = this.props.tile;
+    const { dimension } = this.props;
+    const row = tile.getRow();
+    const col = tile.getCol();
+    const top = row * dimension;
+    const left = col * dimension;
+
+    return [top, left];
+  }
+
+  /**
+   * move the tile with top/left offsets
+   * ! notice: the translated attribute still exists after re-render
+   * @param top row deviation
+   * @param left col devation
+   */
+  private moveTileComponent(top: number, left: number) {
+    const { dimension } = this.props;
+    left *= dimension;
+    top *= dimension;
+    move('#' + this.domId)
+      .translate(left, top)
+      .then(this.props.onMove) // ? work around for view updating
+      .end();
+  }
+
+  /**
+   * trigger tile.move() method in the data model
+   */
   private handleClick() {
     const { tile } = this.props;
-    const originalPosition = tile.location;
-    const afterPosition = tile.move();
-    if (originalPosition === afterPosition) {
+    const oldRow = tile.getRow();
+    const oldCol = tile.getCol();
+
+    tile.move();
+
+    const row = tile.getRow()
+    const col = tile.getCol();
+    if (row === oldRow && col === oldCol) {
       return;
     }
-    // ? notify parent?
+    // ? notify parent? No: event bubling to the board (parent)
+
+    // ! animation
+    // console.log('moving', `row: ${row}, oldRow: ${oldRow}; col: ${col}, oldCol: ${oldCol}`);
+    this.moveTileComponent(row - oldRow, col - oldCol);
   }
 }
 

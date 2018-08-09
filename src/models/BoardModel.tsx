@@ -18,7 +18,6 @@ class BoardModel implements Board {
         id: i < size - 1 ? i + 1 : 'empty',
         location: i,
         getRow() {
-          console.log(this);
           return thisBoard.getRow(this.location);
         },
         getCol() {
@@ -30,6 +29,14 @@ class BoardModel implements Board {
       })
     }
     this.setToFinishState();
+  }
+
+  public getRow(location: number) {
+    return this.locationToCell(location)[0];
+  }
+
+  public getCol(location: number) {
+    return this.locationToCell(location)[1];
   }
 
   /**
@@ -52,14 +59,6 @@ class BoardModel implements Board {
 
     this.swap(location, newLocation);
     return newLocation;
-  }
-
-  public getRow(location: number) {
-    return this.locationToCell(location)[0];
-  }
-
-  public getCol(location: number) {
-    return this.locationToCell(location)[1];
   }
 
   /**
@@ -122,8 +121,10 @@ class BoardModel implements Board {
     const location = this.cellToLocation(row, col);
 
     if (row < 0 || row >= d || col < 0 || col >= d || tiles[location].id !== 'empty') {
+      // console.log('isCellEmpty:', undefined);
       return undefined;
     }
+    // console.log('isCellEmpty:', location + 1);
     return location + 1;
   }
 

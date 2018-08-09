@@ -27,17 +27,16 @@ class BoardComponent extends React.Component<Props> {
   // TODO: responsive?
   private boardStyle: React.CSSProperties;
 
-  // ? event bubbling
-  public handleClick() {
-    this.props.onChange();
-  }
+  // public shouldComponentUpdate() {
+  //   // ? prevent update, left the tiles themselve control their own position
+  //   return false;
+  // }
 
   public render() {
     const handleClick = this.handleClick.bind(this);
     return (
       <div style={this.boardStyle}
-        className="center game-board"
-        onClick={handleClick}>
+        className="center game-board">
         {this.props.board.tiles.map(tile => {
           let color = "";
           if (typeof tile.id === 'number') {
@@ -46,11 +45,17 @@ class BoardComponent extends React.Component<Props> {
           return (
             <TileComponent key={tile.id} tile={tile}
               dimension={this.props.itemWidth}
-              color={color} />
+              color={color}
+              onMove={handleClick} />
           )
         })}
       </div>
     )
+  }
+
+  // ? event bubbling
+  private handleClick() {
+    this.props.onChange();
   }
 }
 

@@ -11,6 +11,7 @@ export interface Props {
 
 export interface State {
   game: Game;
+  // TODO: game speed
 }
 
 class GameComponent extends React.Component<Props, State> {
@@ -39,6 +40,9 @@ class GameComponent extends React.Component<Props, State> {
   }
 
   public handleGameBoardChagne() {
+    // ! test
+    // ! originally update view according to the new arrangement of tiles
+    // ! without animation
     this.setState(this.state, () => {
       // async: 
       // !bug: callback invoked before re-rendering
@@ -46,6 +50,7 @@ class GameComponent extends React.Component<Props, State> {
         alert('Congrad! you finisehd');
       }
     });
+    // console.log(this.state.game.board.tiles);
   }
 
   // TODO: center the game board; failed 
