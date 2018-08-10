@@ -9,6 +9,11 @@
 2. two phrases for tile movement (1.animation, 2.react setState)
 
 # problems not yet solved
-- [] check finished before the view is rendered (wrong)
+- [x] check finished before the view is rendered (wrong); work-around: check after animation
 - [] generate puzzles that are guranteed to be solvable (4 * 4)
+- [] 15-puzzle in mobile size: bad layout; slow
 
+# tasks
+- [] Type move.js
+- [] Test GameComponent
+- [] migration to Typescript 3.0 (tentative)

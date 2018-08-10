@@ -1,7 +1,13 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+/node_modules/**
+# types defined by myself, tricky
+!/node_modules/@types/
+!/node_modules/@types/**
+/node_modules/@types/**
+!/node_modules/@types/move-js/
+!/node_modules/@types/move-js/**
 
 # testing
 /coverage
