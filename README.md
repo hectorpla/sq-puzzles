@@ -17,3 +17,4 @@
 - [] Type move.js
 - [] Test GameComponent
 - [] migration to Typescript 3.0 (tentative)
+- [] deploy on Heroku
