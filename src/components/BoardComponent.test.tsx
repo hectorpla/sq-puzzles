@@ -34,6 +34,7 @@ describe('<BoardComponent />', () => {
 
     it('onChange() should be invoked when any tile is clicke', () => {
       const onChangeSpy = sinon.spy();
+      // ! full-rendered: might be slow
       const component = enzyme.mount(<BoardComponent board={board} itemWidth={1} onChange={onChangeSpy} />);
 
       const tiles = component.find(TileComponent);

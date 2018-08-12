@@ -81,7 +81,6 @@ describe('8-puzzle', () => {
   it('two moves (7 -> 8, 8 -> 7) back to finished state', () => {
     board.move(7);
     expect(board.move(8)).toBe(7);
-    console.log(board.tiles);
     checkFinished(board);
     expect(board.matchedPlaces).toBe(9);
   });

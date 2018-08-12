@@ -30,6 +30,8 @@ class GameComponent extends React.Component<Props, State> {
     this.gamePanelStyle = {
       height: size
     }
+    this.handleGameBoardChagne = this.handleGameBoardChagne.bind(this);
+    this.resetGame = this.resetGame.bind(this);
   }
 
   public componentDidMount() {
@@ -49,31 +51,31 @@ class GameComponent extends React.Component<Props, State> {
   }
 
   public render() {
-    const handleGameBoardChagne = this.handleGameBoardChagne.bind(this);
-    const handleReset = this.resetGame.bind(this);
     const dimensions = this.props.dimensions;
 
     return (
       <div className="container">
-        <div className="title">
+        <div className="title row">
           <p className="center">{dimensions * dimensions - 1}-puzzle </p>
         </div>
-        <div style={this.gamePanelStyle} className="game-board-panel">
+        <div style={this.gamePanelStyle} className="game-board-panel row">
           <BoardComponent
             board={this.state.game.board}
             itemWidth={this.itemWidth}
-            onChange={handleGameBoardChagne} />
+            onChange={this.handleGameBoardChagne} />
         </div>
         <div>
           {/* TODO: animation for match changes */}
 
-          <div className="control-panel center">
-            <span className="card-panel blue-grey lighten-2">
-              # matched tiles: {this.state.game.board.matchedPlaces}
-            </span>
-            <span>
-              <button className="waves-effect teal btn" onClick={handleReset}>New Game</button>
-            </span>
+          <div className="control-panel row center">
+            <div className="col s6">
+              <div className="card-panel blue-grey lighten-2 col s8 offset-s2">
+                <i className="material-icons inline-icon">change_history</i> matched tiles: {this.state.game.board.matchedPlaces}
+              </div>
+            </div>
+            <div className="col s6">
+              <button className="waves-effect teal btn" onClick={this.resetGame}>New Game</button>
+            </div>
           </div>
         </div>
       </div>

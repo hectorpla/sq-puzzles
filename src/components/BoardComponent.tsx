@@ -34,13 +34,13 @@ class BoardComponent extends React.Component<Props> {
     this.boardStyle = {
       width
     }
+    this.handleClick = this.handleClick.bind(this);
   }
 
   public render() {
-    const handleClick = this.handleClick.bind(this);
     return (
       <div style={this.boardStyle}
-        className="game-board brown lighten-2">
+        className="game-board brown lighten-2 hoverable">
         {this.props.board.tiles.map(tile => {
           let color = "";
           if (typeof tile.id === 'number') {
@@ -50,7 +50,7 @@ class BoardComponent extends React.Component<Props> {
             <TileComponent key={tile.id} tile={tile}
               dimension={this.props.itemWidth}
               color={color}
-              onMove={handleClick} />
+              onMove={this.handleClick} />
           )
         })}
       </div>

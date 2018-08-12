@@ -1,6 +1,7 @@
 .title {
   line-height: 20px;
   font-size: 20px;
+  margin-top: 20px;
 }
 
 .game-board-panel {
@@ -21,3 +22,7 @@
 .control-panel span {
   margin: 5px 5px 5px 5px;
 } 
+
+.inline-icon {
+  vertical-align: bottom;
+}

@@ -55,7 +55,7 @@ class BoardModel implements Board {
       return location;
     }
     newLocation -= 1; // bypassing || operator's indiscrimination for 0 and undef
-    console.log(location, '->', newLocation);
+    // console.log(location, '->', newLocation);
 
     this.swap(location, newLocation);
     return newLocation;
