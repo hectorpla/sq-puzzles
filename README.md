@@ -14,7 +14,7 @@
 - [] 15-puzzle in mobile size: bad layout; slow
 
 # tasks
-- [] Type move.js
+- [x] Type move.js
 - [] Test GameComponent
 - [] migration to Typescript 3.0 (tentative)
 - [] deploy on Heroku

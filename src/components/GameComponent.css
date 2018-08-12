@@ -1,11 +1,11 @@
-header {
+.title {
   line-height: 20px;
   font-size: 20px;
 }
 
 .game-board-panel {
   position: relative;
-  margin: 60px 5px 5px 20px;
+  margin: 60px 5px 60px 5px;
 }
 
 .game-board-panel div {
@@ -15,7 +15,7 @@ header {
 
 .control-panel {
   position: relative;
-  margin-top: 180px;
+  /* margin-top: 180px; */
 }
 
 .control-panel span {

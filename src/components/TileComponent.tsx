@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Tile } from '../types';
 import './TileComponent.css';
 
-// import * as move from 'move-js';
 // ! mind name confliction in global scope
 import move from 'move-js';
 
@@ -28,10 +27,8 @@ class TileComponent extends React.Component<Props> {
       width: itemLength,
       height: itemLength,
       lineHeight: itemLength + 'px',
-      fontSize: 20,
+      fontSize: itemLength * 0.38,
       margin: `${margin}px ${margin}px ${margin}px ${margin}px`,
-      transform: 'none', // translate3d(0px, 0px, 0px)
-      WebkitTransform: 'none'
     };
 
     this.classNames += ' ' + this.props.color;
@@ -87,6 +84,8 @@ class TileComponent extends React.Component<Props> {
       .end(() => {
         // ! another work around to restore place after re-render
         // ! problems happend when the duration is long
+        // reference to CSS3, can specify at which point in the animation
+        // the movement starts
         move('#' + this.domId)
           .duration(0)
           .to(0, 0)

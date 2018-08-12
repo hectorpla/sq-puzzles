@@ -38,9 +38,6 @@ class GameComponent extends React.Component<Props, State> {
   }
 
   public handleGameBoardChagne() {
-    // ! test
-    // ! originally update view according to the new arrangement of tiles
-    // ! without animation
     this.setState(this.state, () => {
       // async: 
       // !bug: callback invoked before re-rendering
@@ -58,18 +55,16 @@ class GameComponent extends React.Component<Props, State> {
 
     return (
       <div className="container">
-        <header>
+        <div className="title">
           <p className="center">{dimensions * dimensions - 1}-puzzle </p>
-        </header>
-        <section style={this.gamePanelStyle} className="game-board-panel">
-          <div className="center">
-            <BoardComponent
-              board={this.state.game.board}
-              itemWidth={this.itemWidth}
-              onChange={handleGameBoardChagne} />
-          </div>
-        </section>
-        <section>
+        </div>
+        <div style={this.gamePanelStyle} className="game-board-panel">
+          <BoardComponent
+            board={this.state.game.board}
+            itemWidth={this.itemWidth}
+            onChange={handleGameBoardChagne} />
+        </div>
+        <div>
           {/* TODO: animation for match changes */}
 
           <div className="control-panel center">
@@ -80,10 +75,12 @@ class GameComponent extends React.Component<Props, State> {
               <button className="waves-effect teal btn" onClick={handleReset}>New Game</button>
             </span>
           </div>
-        </section>
+        </div>
       </div>
     )
   }
+
+  // TODO: change dimension 
 
   private resetGame() {
     this.state.game.reset();
