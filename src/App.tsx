@@ -29,15 +29,19 @@ class App extends React.Component<{}, State> {
           <div className="input-field col s4  valign-wrapper">
             <select className="browser-default"
               onChange={this.handleDimensionChange}
-              value={3}>
-              <option value={3} disabled={true}> choose the dimension </option>
+              value={this.state.dimension}>
+              <option disabled={true}> choose dimension </option>
               <option value={3}> 8-puzzle </option>
               <option value={4}> 15-puzzle </option>
             </select>
           </div>
         </nav>
         <main>
-          <GameComponent dimensions={this.state.dimension} />
+          {/* ! nice work-around for updating game dimension using key
+            * refer to https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
+            */}
+          <GameComponent dimensions={this.state.dimension}
+            key={this.state.dimension} />
         </main>
         <footer className="white-text brown lighten-1">
           <p>github: <a href={gitUrl}> {gitUrl} </a></p>

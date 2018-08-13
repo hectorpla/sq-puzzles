@@ -34,14 +34,8 @@ class GameComponent extends React.Component<Props, State> {
     this.resetGame = this.resetGame.bind(this);
   }
 
-  public componentDidMount() {
-    // do nothing
-    // this.resetGame();
-  }
-
   public handleGameBoardChagne() {
     this.setState(this.state, () => {
-      // async: 
       // !bug: callback invoked before re-rendering
       if (this.state.game.board.isFinished()) {
         alert('Congrad! you finisehd');
@@ -52,7 +46,6 @@ class GameComponent extends React.Component<Props, State> {
 
   public render() {
     const dimensions = this.props.dimensions;
-
     return (
       <div className="container">
         <div className="title row">
@@ -81,8 +74,6 @@ class GameComponent extends React.Component<Props, State> {
       </div>
     )
   }
-
-  // TODO: change dimension 
 
   private resetGame() {
     this.state.game.reset();

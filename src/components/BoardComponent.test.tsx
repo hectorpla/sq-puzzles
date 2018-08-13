@@ -36,8 +36,8 @@ describe('<BoardComponent />', () => {
       const onChangeSpy = sinon.spy();
       // ! full-rendered: might be slow
       const component = enzyme.mount(<BoardComponent board={board} itemWidth={1} onChange={onChangeSpy} />);
-
       const tiles = component.find(TileComponent);
+
       tiles.forEach((tile, i) => {
         tile.simulate('click');
         // console.log(tile, onChangeSpy.callCount);
