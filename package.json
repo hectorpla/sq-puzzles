@@ -12,7 +12,8 @@
   "scripts": {
     "lint": "tslint --fix --project tsconfig.json",
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
+    "build": "react-scripts-ts build && mv build server/",
+    "postbuild": "mv build server/",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
