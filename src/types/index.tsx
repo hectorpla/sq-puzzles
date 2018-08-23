@@ -1,18 +1,19 @@
 export interface Game {
-  board: Board;
   readonly dimensions: number; // ? duplication
+  // TODO: should be readonly, temporarily leave it because Game has no implementing class
   movementCount: number;
-  movementHistory?: any; // not considered yet
+  readonly movementHistory?: any; // not considered yet
+  readonly board: Board;
   reset: () => void;
 }
 
 export interface Board {
   readonly dimensions: number;
-  tiles: Tile[];
   readonly matchedPlaces: number;
+  readonly tiles: Tile[];
   move: (location: number) => number;
   /*
-    check if the game is finished
+    check if the game is finished: matched == d * d - 1
   */
   isFinished: () => boolean;
   shuffle: () => void;
@@ -20,9 +21,7 @@ export interface Board {
 
 // TODO: consider class implementation instead of plain object
 export interface Tile {
-  id: number | 'empty';
-  // TODO: the client should not know the internal location in the array
-  location: number;
+  readonly id: number | 'empty';
   move: () => number;
   getRow: () => number;
   getCol: () => number;

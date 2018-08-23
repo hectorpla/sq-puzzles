@@ -9,6 +9,9 @@
 !/node_modules/@types/move-js/
 !/node_modules/@types/move-js/**
 
+# server
+/server
+
 # testing
 /coverage
 

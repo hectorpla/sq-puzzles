@@ -21,6 +21,8 @@ class GameComponent extends React.Component<Props, State> {
 
   private itemWidth: number = this.props.itemWidth || 80;
   private gamePanelStyle: React.CSSProperties;
+  private freezing = false;
+  // private boardRef: React.RefObject<HTMLDivElement>;
 
   public constructor(props: Props) {
     super(props);
@@ -32,6 +34,16 @@ class GameComponent extends React.Component<Props, State> {
     }
     this.handleGameBoardChagne = this.handleGameBoardChagne.bind(this);
     this.resetGame = this.resetGame.bind(this);
+    this.handleClickCapture = this.handleClickCapture.bind(this);
+    this.freeze = this.freeze.bind(this);
+    this.thaw = this.thaw.bind(this);
+  }
+
+  public handleClickCapture(e: React.MouseEvent<HTMLDivElement>) {
+    if (this.freezing) {
+      console.log('stop propagation');
+      e.stopPropagation();
+    }
   }
 
   public handleGameBoardChagne() {
@@ -51,11 +63,14 @@ class GameComponent extends React.Component<Props, State> {
         <div className="title row">
           <p className="center">{dimensions * dimensions - 1}-puzzle </p>
         </div>
-        <div style={this.gamePanelStyle} className="game-board-panel row">
+        <div onClickCapture={this.handleClickCapture}
+         style={this.gamePanelStyle} className="game-board-panel row">
           <BoardComponent
             board={this.state.game.board}
             itemWidth={this.itemWidth}
-            onChange={this.handleGameBoardChagne} />
+            onChange={this.handleGameBoardChagne}
+            freeze={this.freeze}
+            thaw={this.thaw} />
         </div>
         <div>
           {/* TODO: animation for match changes */}
@@ -78,6 +93,16 @@ class GameComponent extends React.Component<Props, State> {
   private resetGame() {
     this.state.game.reset();
     this.setState(this.state);
+  }
+
+  private freeze() {
+    this.freezing = true;
+    console.log('board freezed');
+  }
+
+  private thaw() {
+    this.freezing = false;
+      console.log('board activated (de-freezed)');
   }
 }
 

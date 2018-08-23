@@ -1,10 +1,12 @@
 import { Board, Tile } from '../types';
 import { countInversions, shuffle } from '../utils';
 
+// should not expose, location is only visible here
+type RealTile = Tile & { location: number };
+
 class BoardModel implements Board {
-  // ? public? interface inforces that
   public readonly dimensions: number;
-  public tiles: Tile[];
+  public tiles: RealTile[];
   public matchedPlaces: number = 0;
 
   constructor(dimensions: number) {
@@ -143,6 +145,7 @@ class BoardModel implements Board {
   }
 
   private swap(pos1: number, pos2: number) {
+    console.log('swapping:', pos1, pos2);
     if (pos1 === pos2) { // for sake of safefy
       return;
     }
@@ -158,6 +161,7 @@ class BoardModel implements Board {
 
     this.matchedPlaces += this.isMatched(pos1) ? 1 : 0;
     this.matchedPlaces += this.isMatched(pos2) ? 1 : 0;
+    console.log(this.tiles);
   }
 }
 

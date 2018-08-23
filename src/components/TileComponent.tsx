@@ -3,13 +3,17 @@ import { Tile } from '../types';
 import './TileComponent.css';
 
 // ! mind name confliction in global scope
-import move from 'move-js';
+import Move from 'move-js';
 
 export interface Props {
   tile: Tile; // model
   dimension: number;
   color: string;
   onMove: () => void;
+
+  // passed down from GameComponent
+  freeze?: () => void;
+  thaw?: () => void;
 }
 
 class TileComponent extends React.Component<Props> {
@@ -32,8 +36,9 @@ class TileComponent extends React.Component<Props> {
     };
 
     this.classNames += ' ' + this.props.color;
+    this.handleClick = this.handleClick.bind(this);
   }
-
+  
   public render() {
     const tile = this.props.tile;
     const [top, left] = this.getOffset();
@@ -43,12 +48,10 @@ class TileComponent extends React.Component<Props> {
       top,
       left
     }
-    // console.debug(`square ${this.props.tile.id}: location ${location}, top ${top}, left: ${left}`);
 
-    const handleClick = this.handleClick.bind(this);
     return (
       <div id={this.domId} className={this.classNames} style={this.tileStyle}
-        onClick={handleClick}>
+        onClick={this.handleClick}>
         <span>
           {tile.id === 'empty' ? "" : this.props.tile.id}
         </span>
@@ -77,8 +80,12 @@ class TileComponent extends React.Component<Props> {
     const { dimension } = this.props;
     left *= dimension;
     top *= dimension;
-    move('#' + this.domId)
-      .duration(200)
+    
+    // removeEventListener doesn't help here, the problem is moves of other tiles
+    console.log(`tile ${this.props.tile.id} moving: ${left}, ${top}`);
+    this.props.freeze!();
+    new Move('#' + this.domId)
+      .duration(800)
       .translate(left, top)
       .then(this.props.onMove) // ? work around for view updating
       .end(() => {
@@ -86,15 +93,20 @@ class TileComponent extends React.Component<Props> {
         // ! problems happend when the duration is long
         // reference to CSS3, can specify at which point in the animation
         // the movement starts
-        move('#' + this.domId)
-          .duration(0)
-          .to(0, 0)
-          .end();
+        console.log(`tile ${this.props.tile.id} returning`)
+        // new Move('#' + this.domId)
+        //   .duration(0)
+        //   .to(0, 0)
+        //   .end();
+        const elem = document.querySelector('#' + this.domId)!;
+        elem.classList.add('origin');
+        this.props.thaw!();
       });
   }
 
   /**
    * trigger tile.move() method in the data model
+   * ! theorethical data race of the data model?
    */
   private handleClick() {
     const { tile } = this.props;

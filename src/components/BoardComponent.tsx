@@ -9,6 +9,10 @@ export interface Props {
   // other states, like top/left offset
   itemWidth: number;
   onChange: () => void;
+
+  // passed down from GameComponent
+  freeze?: () => void; 
+  thaw?: () => void;
 }
 
 // !temporaily
@@ -50,7 +54,9 @@ class BoardComponent extends React.Component<Props> {
             <TileComponent key={tile.id} tile={tile}
               dimension={this.props.itemWidth}
               color={color}
-              onMove={this.handleClick} />
+              onMove={this.handleClick} 
+              freeze={this.props.freeze}
+              thaw={this.props.thaw} />
           )
         })}
       </div>
