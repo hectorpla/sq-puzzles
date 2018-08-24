@@ -35,7 +35,7 @@ describe('<BoardComponent />', () => {
     describe('8-puzzle linear clicks (1~8,empty)', () => {
       it('at initial state, onChange() should be invoked once and at tile 6', () => {
         const onChangeSpy = sinon.spy();
-        //! full-rendered: might be slow
+        // !full-rendered: might be slow
         const component = enzyme.mount(<BoardComponent board={board} itemWidth={1}
           onChange={onChangeSpy} />);
         const tiles = component.find(TileComponent);
@@ -45,7 +45,7 @@ describe('<BoardComponent />', () => {
           console.log(`clicking ${tile}, ${i}`)
         });
         
-        //? onChange() called async, expected to fail
+        // ?onChange() called async, expected to fail
         expect(onChangeSpy.callCount).toBe(1);
         expect(tiles.get(5).props.id).toBe('empty');
         expect(tiles.get(8).props.id).toBe(6);
