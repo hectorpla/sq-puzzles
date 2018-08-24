@@ -2,14 +2,18 @@ import * as React from 'react';
 import { Tile } from '../types';
 import './TileComponent.css';
 
-// ! mind name confliction in global scope
-import Move from 'move-js';
+// ? a little bit strange: import as namespace but used as a function
+import * as anime from 'animejs';
 
 export interface Props {
   tile: Tile; // model
   dimension: number;
   color: string;
-  onMove: () => void;
+
+  /**
+   * callback that should be called after animation stops
+   */
+  afterMove: (callback: () => void) => void;
 
   // passed down from GameComponent
   freeze?: () => void;
@@ -38,7 +42,7 @@ class TileComponent extends React.Component<Props> {
     this.classNames += ' ' + this.props.color;
     this.handleClick = this.handleClick.bind(this);
   }
-  
+
   public render() {
     const tile = this.props.tile;
     const [top, left] = this.getOffset();
@@ -80,28 +84,38 @@ class TileComponent extends React.Component<Props> {
     const { dimension } = this.props;
     left *= dimension;
     top *= dimension;
-    
-    // removeEventListener doesn't help here, the problem is moves of other tiles
+
     console.log(`tile ${this.props.tile.id} moving: ${left}, ${top}`);
-    this.props.freeze!();
-    new Move('#' + this.domId)
-      .duration(800)
-      .translate(left, top)
-      .then(this.props.onMove) // ? work around for view updating
-      .end(() => {
-        // ! another work around to restore place after re-render
-        // ! problems happend when the duration is long
-        // reference to CSS3, can specify at which point in the animation
-        // the movement starts
-        console.log(`tile ${this.props.tile.id} returning`)
-        // new Move('#' + this.domId)
-        //   .duration(0)
-        //   .to(0, 0)
-        //   .end();
-        const elem = document.querySelector('#' + this.domId)!;
-        elem.classList.add('origin');
-        this.props.thaw!();
-      });
+
+    // ? work around that prevents weird behaviors
+    // TODO make it parallel
+    if (this.props.freeze) {
+      this.props.freeze();
+    }
+    anime({
+      targets: '#' + this.domId,
+      translateX: left,
+      translateY: top,
+      duration: 100,
+      easing: 'easeOutQuad',
+      complete: (anim) => {
+        console.log(`tile ${this.props.tile.id} returning: ${anim.completed}`);
+        this.props.afterMove(() => {
+          // commented: conflicts with the anime lib: animation only play once
+          // const elem = document.querySelector('#' + this.domId)!;
+          // elem.classList.add('origin');
+
+          // ? work around
+          anime({
+            targets: '#' + this.domId,
+            translateX: 0,
+            translateY: 0,
+            duration: 0,
+            complete: () => { if (this.props.thaw) { this.props.thaw!() } }
+          })
+        });
+      }
+    })
   }
 
   /**
@@ -120,10 +134,8 @@ class TileComponent extends React.Component<Props> {
     if (row === oldRow && col === oldCol) {
       return;
     }
-    // ? notify parent? No: event bubling to the board (parent)
 
     // ! animation
-    // console.log('moving', `row: ${row}, oldRow: ${oldRow}; col: ${col}, oldCol: ${oldCol}`);
     this.moveTileComponent(row - oldRow, col - oldCol);
   }
 }

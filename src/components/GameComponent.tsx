@@ -40,18 +40,22 @@ class GameComponent extends React.Component<Props, State> {
   }
 
   public handleClickCapture(e: React.MouseEvent<HTMLDivElement>) {
+    // console.log('handleClickCapture called', this.freezing);
     if (this.freezing) {
       console.log('stop propagation');
       e.stopPropagation();
     }
   }
 
-  public handleGameBoardChagne() {
+  public handleGameBoardChagne(callback: () => void) {
+    // ? tricky workflow
     this.setState(this.state, () => {
+      console.log('setState() finished');
       // !bug: callback invoked before re-rendering
       if (this.state.game.board.isFinished()) {
         alert('Congrad! you finisehd');
       }
+      callback();
     });
     // console.log(this.state.game.board.tiles);
   }
@@ -64,7 +68,7 @@ class GameComponent extends React.Component<Props, State> {
           <p className="center">{dimensions * dimensions - 1}-puzzle </p>
         </div>
         <div onClickCapture={this.handleClickCapture}
-         style={this.gamePanelStyle} className="game-board-panel row">
+          style={this.gamePanelStyle} className="game-board-panel row">
           <BoardComponent
             board={this.state.game.board}
             itemWidth={this.itemWidth}
@@ -97,12 +101,12 @@ class GameComponent extends React.Component<Props, State> {
 
   private freeze() {
     this.freezing = true;
-    console.log('board freezed');
+    // console.log('board freezed');
   }
 
   private thaw() {
     this.freezing = false;
-      console.log('board activated (de-freezed)');
+    // console.log('board activated (un-freezed)');
   }
 }
 

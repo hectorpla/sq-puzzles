@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "move-js": "^0.5.0",
+    "animejs": "^2.2.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts-ts": "2.16.0",
@@ -12,12 +12,13 @@
   "scripts": {
     "lint": "tslint --fix --project tsconfig.json",
     "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build && mv build server/",
-    "postbuild": "mv build server/",
+    "build": "react-scripts-ts build",
+    "postbuild": "rm -rf server/build && mv build/ ./server/",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
+    "@types/animejs": "^2.0.0",
     "@types/enzyme": "^3.1.13",
     "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/jest": "^23.3.1",

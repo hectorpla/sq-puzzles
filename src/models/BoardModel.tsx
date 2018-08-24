@@ -161,7 +161,7 @@ class BoardModel implements Board {
 
     this.matchedPlaces += this.isMatched(pos1) ? 1 : 0;
     this.matchedPlaces += this.isMatched(pos2) ? 1 : 0;
-    console.log(this.tiles);
+    // console.log(this.tiles);
   }
 }
 

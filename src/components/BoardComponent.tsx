@@ -8,7 +8,7 @@ export interface Props {
   board: Board;
   // other states, like top/left offset
   itemWidth: number;
-  onChange: () => void;
+  onChange: (callback: () => void) => void;
 
   // passed down from GameComponent
   freeze?: () => void; 
@@ -38,7 +38,7 @@ class BoardComponent extends React.Component<Props> {
     this.boardStyle = {
       width
     }
-    this.handleClick = this.handleClick.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
   }
 
   public render() {
@@ -54,18 +54,13 @@ class BoardComponent extends React.Component<Props> {
             <TileComponent key={tile.id} tile={tile}
               dimension={this.props.itemWidth}
               color={color}
-              onMove={this.handleClick} 
+              afterMove={this.props.onChange}
               freeze={this.props.freeze}
               thaw={this.props.thaw} />
           )
         })}
       </div>
     )
-  }
-
-  // ? event bubbling
-  private handleClick() {
-    this.props.onChange();
   }
 }
 
