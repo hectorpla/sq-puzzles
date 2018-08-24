@@ -24,7 +24,9 @@ const colors = [
   'lime accent-3',
   'orange lighten-3',
   'green darken-1',
-  'teal accent-2'
+  'teal accent-2',
+  'pink',
+  'blue-grey lighten-2'
 ];
 
 class BoardComponent extends React.Component<Props> {

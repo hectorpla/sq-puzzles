@@ -1,6 +1,7 @@
 import * as React from 'react';
+
 import { Game } from '../types';
-import { getNewGame } from '../utils';
+import { computePositionDelta, getAllPositions, getMovePromises, getNewGame } from '../utils';
 import BoardComponent from './BoardComponent';
 import './GameComponent.css';
 
@@ -81,12 +82,12 @@ class GameComponent extends React.Component<Props, State> {
 
           <div className="control-panel row center">
             <div className="col s6">
-              <div className="card-panel blue-grey lighten-2 col s8 offset-s2">
+              <div className="card-panel lime darken-2 col s8 offset-s2">
                 <i className="material-icons inline-icon">change_history</i> matched tiles: {this.state.game.board.matchedPlaces}
               </div>
             </div>
             <div className="col s6">
-              <button className="waves-effect teal btn" onClick={this.resetGame}>New Game</button>
+              <button className="waves-effect lime darken-4 btn" onClick={this.resetGame}>New Game</button>
             </div>
           </div>
         </div>
@@ -95,8 +96,39 @@ class GameComponent extends React.Component<Props, State> {
   }
 
   private resetGame() {
+    // ? good level to do the animation? maybe better for BoardComponent 
+    const originalPositions = getAllPositions(this.state.game.board.tiles);
+
+    // shuffle
     this.state.game.reset();
-    this.setState(this.state);
+
+    const currentPositions = getAllPositions(this.state.game.board.tiles);
+    const deltas = computePositionDelta(
+      originalPositions,
+      currentPositions,
+      this.itemWidth
+    );
+
+    const { forward, reverse } = getMovePromises(deltas);
+    // console.log(this.state.game.board.tiles);
+
+    this.freeze();
+    // 1. off animation
+    Promise.all(forward.map((func) => func()))
+      .then(() => {
+        // 2. set state
+        this.setState(this.state, () => {
+          // 3. reverse animation
+          console.log('reversing');
+          Promise.all(reverse.map((func) => func()))
+            .then(() => {
+              console.log('reverse completed')
+              this.thaw()
+            })
+        })
+      });
+
+    // this.setState(this.state);
   }
 
   private freeze() {

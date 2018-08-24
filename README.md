@@ -13,7 +13,7 @@
 - [] timer and animation
 
 ## some peripheral goals
-- [] animation for new game
+- [x] animation for new game
 - [] drag and drop
 
 # decisions

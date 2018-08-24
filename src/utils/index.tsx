@@ -1,5 +1,7 @@
 import BoardModel from "../models/BoardModel";
-import { Board, GameInitializor } from "../types";
+import { Board, GameInitializor, Tile } from "../types";
+
+import * as Anime from 'animejs';
 
 const initBoard = (dimensions: number): Board => {
   return new BoardModel(dimensions);
@@ -50,4 +52,77 @@ export const countInversions = (order: number[]) => {
   }
   console.log(count);
   return count;
+}
+
+export interface Point {
+  x: number;
+  y: number;
+}
+export type Delta = Point;
+export const calCoordDelta = (a: Point, b: Point): Delta => {
+  return { x: a.x - b.x, y: a.y - b.y };
+}
+
+interface AllPosition {
+  [id: string]: Delta;
+}
+type AllDelta = AllPosition;
+
+
+export const getAllPositions = (tiles: Tile[]): AllPosition => {
+  const id2pos = {};
+
+  tiles.forEach((tile, i) => {
+    id2pos[tile.id] = { x: tile.getCol(), y: tile.getRow() }
+  })
+  return id2pos;
+}
+
+export const computePositionDelta = (before: AllPosition, after: AllPosition, itemWidth: number): AllDelta => {
+  const id2delta = {};
+
+  for (const id in before) {
+    if (!before.hasOwnProperty(id)) { continue; }
+    const { x, y } = calCoordDelta(after[id], before[id]);
+    id2delta[id] = {
+      x: x * itemWidth,
+      y: y * itemWidth
+    }
+  }
+  return id2delta;
+}
+
+type VoidPromiseGenerators = Array<() => Promise<void>>;
+export interface MovePromises {
+  forward: VoidPromiseGenerators,
+  reverse: VoidPromiseGenerators
+}
+
+export const getMovePromises = (deltas: AllDelta): MovePromises => {
+  const forwardPromises: VoidPromiseGenerators = [];
+  const reversePromises: VoidPromiseGenerators = [];
+
+  for (const id in deltas) {
+    if (!deltas.hasOwnProperty(id)) { continue; }
+    
+    const { x, y } = deltas[id];
+    forwardPromises.push(() => Anime({
+      targets: `#tile-${id}`,
+      translateX: x,
+      translateY: y,
+      duration: 300,
+    }).finished);
+
+    reversePromises.push(() => Anime({
+      targets: `#tile-${id}`,
+      translateX: 0,
+      translateY: 0,
+      duration: 0,
+    }).finished);
+  }
+
+  return {
+    forward: forwardPromises,
+    reverse: reversePromises
+  };
 }

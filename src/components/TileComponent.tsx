@@ -55,7 +55,7 @@ class TileComponent extends React.Component<Props> {
 
     return (
       <div id={this.domId} className={this.classNames} style={this.tileStyle}
-        onClick={this.handleClick}>
+        onClick={this.handleClick} >
         <span>
           {tile.id === 'empty' ? "" : this.props.tile.id}
         </span>
