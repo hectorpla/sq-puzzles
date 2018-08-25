@@ -42,7 +42,7 @@ describe('<BoardComponent />', () => {
 
         tiles.forEach((tile, i) => {
           tile.simulate('click');
-          console.log(`clicking ${tile}, ${i}`)
+          // console.log(`clicking ${tile}, ${i}`)
         });
         
         // ?onChange() called async, expected to fail

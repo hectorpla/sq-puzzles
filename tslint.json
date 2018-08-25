@@ -9,6 +9,7 @@
   "rules": {
     "interface-name": [false],
     "object-literal-sort-keys":false,
-    "no-console": ["error"]
+    "no-console": ["error"],
+    "no-bitwise": false
   }
 }

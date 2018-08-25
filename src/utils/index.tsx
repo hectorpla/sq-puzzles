@@ -50,7 +50,7 @@ export const countInversions = (order: number[]) => {
       }
     }
   }
-  console.log(count);
+  // console.log(count);
   return count;
 }
 
@@ -104,7 +104,7 @@ export const getMovePromises = (deltas: AllDelta): MovePromises => {
 
   for (const id in deltas) {
     if (!deltas.hasOwnProperty(id)) { continue; }
-    
+
     const { x, y } = deltas[id];
     forwardPromises.push(() => Anime({
       targets: `#tile-${id}`,

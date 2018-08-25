@@ -1,6 +1,6 @@
 # problems not yet solved
 - [x] check finished before the view is rendered (wrong); work-around: check after animation
-- [] generate puzzles that are guranteed to be solvable (4 * 4)
+- [0] generate puzzles that are guranteed to be solvable (4 * 4), tests added
 - [x] animation bug: fast move on mobile (solved by freeze + anime.js)
 - [x] 15-puzzle in mobile size: bad layout; slow
 - [] slow response after changing size of the game
@@ -11,6 +11,7 @@
 - [] migration to Typescript 3.0 (tentative)
 - [x] deploy on Heroku
 - [] timer and animation
+- [] finish animation
 
 ## some peripheral goals
 - [x] animation for new game

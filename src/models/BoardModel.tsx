@@ -71,19 +71,6 @@ class BoardModel implements Board {
     return this.matchedPlaces === d * d;
   }
 
-  /**
-   * shuffle the postions of tiles
-   * TODO: naive inprementation, not efficent but enough?
-   * ! only suit for 8-puzzle, case for 15-puzzle is much complicated 
-   */
-  public shuffle() {
-    shuffle(this.tiles);
-    while (countInversions(this.getOrder()) % 2 === 1) {
-      shuffle(this.tiles);
-    }
-    this.syncLocations();
-  }
-
   public setToFinishState() {
     this.tiles.sort((a, b) => {
       if (a.id === 'empty') { return 1 };
@@ -91,6 +78,37 @@ class BoardModel implements Board {
       return a.id > b.id ? 1 : -1; // fixed: originally 1 : 0
     })
     this.syncLocations();
+  }
+
+  /**
+   * shuffle the postions of tiles
+   * TODO: naive inprementation, not efficent but enough?
+   * ! only suit for 8-puzzle, case for 15-puzzle is much complicated 
+   */
+  public shuffle() {
+    do {
+      shuffle(this.tiles);
+    } while (!this.isSolvable());
+    this.syncLocations();
+  }
+
+  /**
+   * idea from geeksforgeeks (not totally figure out):
+   * when the size is even, check if:
+   * 1. the count of inversion is odd, and row of empty is even
+   * 2. even and odd
+   */
+  public isSolvable(): boolean {
+    // ensure the state is consistent, (added for tests) 
+    this.syncLocations();
+
+    const numOfInversion = countInversions(this.getOrder());
+    if (this.dimensions % 2 === 1) {
+      return numOfInversion % 2 === 0;
+    }
+    const emptyRow = this.tiles.filter(tile => tile.id === 'empty')[0].getRow(); 
+    // console.log(numOfInversion, emptyRow);
+    return !!((numOfInversion & 1) ^ (emptyRow & 1));
   }
 
   /**
@@ -145,7 +163,7 @@ class BoardModel implements Board {
   }
 
   private swap(pos1: number, pos2: number) {
-    console.log('swapping:', pos1, pos2);
+    // console.log('swapping:', pos1, pos2);
     if (pos1 === pos2) { // for sake of safefy
       return;
     }
