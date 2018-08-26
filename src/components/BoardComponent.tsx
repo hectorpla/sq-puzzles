@@ -8,7 +8,7 @@ export interface Props {
   board: Board;
   // other states, like top/left offset
   itemWidth: number;
-  onChange: (callback: () => void) => void;
+  onChange: () => Promise<void>;
 
   // passed down from GameComponent
   freeze?: () => void; 

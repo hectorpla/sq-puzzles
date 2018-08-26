@@ -9,7 +9,10 @@ import TileComponent from './TileComponent';
 
 enzyme.configure({ adapter: new Adapter() });
 
-const mockOnChange = () => { console.log('should not be invoked') };
+const mockOnChange = () => {
+  console.log('should not be invoked');
+  return Promise.resolve();
+};
 
 describe('<BoardComponent />', () => {
   describe('rendering', () => {
@@ -32,23 +35,21 @@ describe('<BoardComponent />', () => {
       board = new BoardModel(3);
     })
 
-    describe('8-puzzle linear clicks (1~8,empty)', () => {
+    describe('8-puzzle, click tile 6', () => {
       it('at initial state, onChange() should be invoked once and at tile 6', () => {
         const onChangeSpy = sinon.spy();
         // !full-rendered: might be slow
         const component = enzyme.mount(<BoardComponent board={board} itemWidth={1}
           onChange={onChangeSpy} />);
         const tiles = component.find(TileComponent);
-
-        tiles.forEach((tile, i) => {
-          tile.simulate('click');
-          // console.log(`clicking ${tile}, ${i}`)
-        });
         
-        // ?onChange() called async, expected to fail
-        expect(onChangeSpy.callCount).toBe(1);
-        expect(tiles.get(5).props.id).toBe('empty');
-        expect(tiles.get(8).props.id).toBe(6);
+        // ? didn't pass type check, but actually no runtime error
+        (tiles.at(5).instance() as TileComponent).handleClick()
+          .then(() => {
+            expect(onChangeSpy.callCount).toBe(1);
+            expect(tiles.get(5).props.id).toBe('empty');
+            expect(tiles.get(8).props.id).toBe(6);
+          });
       });
     })
 

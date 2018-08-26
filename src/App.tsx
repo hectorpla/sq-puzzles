@@ -23,10 +23,10 @@ class App extends React.Component<{}, State> {
     return (
       <div className="App">
         <nav className="brown lighten-1 row header">
-          <div className="col s8">
+          <div className="col s8 m8">
             <p className="truncate">A game powered by React, typescript and materialize design</p>
           </div>
-          <div className="input-field col s4  valign-wrapper">
+          <div className="input-field col s4 m4 valign-wrapper">
             <select className="browser-default"
               onChange={this.handleDimensionChange}
               value={this.state.dimension}>

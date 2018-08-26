@@ -42,6 +42,7 @@ class BoardModel implements Board {
   }
 
   /**
+   * ! logically, this method should not be exposed
    * @param {number} the tile to move
    */
   public move(location: number) {

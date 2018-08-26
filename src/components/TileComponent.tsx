@@ -5,6 +5,7 @@ import './TileComponent.css';
 // ? a little bit strange: import as namespace but used as a function
 import * as anime from 'animejs';
 
+// TODO: make anime as a depedency (for test)
 export interface Props {
   tile: Tile; // model
   dimension: number;
@@ -13,9 +14,9 @@ export interface Props {
   /**
    * callback that should be called after animation stops
    */
-  afterMove: (callback: () => void) => void;
+  afterMove: () => Promise<void>;
 
-  // passed down from GameComponent
+  // passed down from GameComponent, sync methods
   freeze?: () => void;
   thaw?: () => void;
 }
@@ -41,6 +42,25 @@ class TileComponent extends React.Component<Props> {
 
     this.classNames += ' ' + this.props.color;
     this.handleClick = this.handleClick.bind(this);
+  }
+
+  /**
+   * trigger tile.move() method in the data model
+   * ! theorethical data race of the data model?
+   */
+  public handleClick() {
+    const { tile } = this.props;
+    const oldRow = tile.getRow();
+    const oldCol = tile.getCol();
+
+    tile.move();
+
+    const row = tile.getRow()
+    const col = tile.getCol();
+    if (row === oldRow && col === oldCol) {
+      return Promise.resolve();
+    }
+    return this.moveTileComponent(row - oldRow, col - oldCol);
   }
 
   public render() {
@@ -92,52 +112,31 @@ class TileComponent extends React.Component<Props> {
     if (this.props.freeze) {
       this.props.freeze();
     }
-    anime({
+    return anime({
       targets: '#' + this.domId,
       translateX: left,
       translateY: top,
       duration: 100,
       easing: 'easeOutQuad',
-      complete: (anim) => {
-        console.log(`tile ${this.props.tile.id} returning: ${anim.completed}`);
-        this.props.afterMove(() => {
-          // commented: conflicts with the anime lib: animation only play once
-          // const elem = document.querySelector('#' + this.domId)!;
-          // elem.classList.add('origin');
-
-          // ? work around
-          anime({
-            targets: '#' + this.domId,
-            translateX: 0,
-            translateY: 0,
-            duration: 0,
-            complete: () => { if (this.props.thaw) { this.props.thaw!() } }
-          })
-        });
-      }
-    })
+    }).finished
+      .then(() => {
+        console.log(`tile ${this.props.tile.id} returning`);
+        return this.props.afterMove();
+      })
+      .then(() => {
+        // ? work around
+        return anime({
+          targets: '#' + this.domId,
+          translateX: 0,
+          translateY: 0,
+          duration: 0,
+        }).finished
+      })
+      .then(() => {
+        if (this.props.thaw) { this.props.thaw() }
+      });
   }
 
-  /**
-   * trigger tile.move() method in the data model
-   * ! theorethical data race of the data model?
-   */
-  private handleClick() {
-    const { tile } = this.props;
-    const oldRow = tile.getRow();
-    const oldCol = tile.getCol();
-
-    tile.move();
-
-    const row = tile.getRow()
-    const col = tile.getCol();
-    if (row === oldRow && col === oldCol) {
-      return;
-    }
-
-    // ! animation
-    this.moveTileComponent(row - oldRow, col - oldCol);
-  }
 }
 
 export default TileComponent;

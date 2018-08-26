@@ -4,6 +4,7 @@ import { Game } from '../types';
 import { computePositionDelta, getAllPositions, getMovePromises, getNewGame } from '../utils';
 import BoardComponent from './BoardComponent';
 import './GameComponent.css';
+import Timer from './Timer';
 
 export interface Props {
   dimensions: number;
@@ -13,17 +14,26 @@ export interface Props {
 export interface State {
   game: Game;
   // TODO: game speed
+
+  /**
+   * game states: initial, gaming, finished, etc.
+   */
+  isStartState: boolean;
+  counting: boolean;
 }
 
 class GameComponent extends React.Component<Props, State> {
   public state = {
-    game: getNewGame(this.props.dimensions)
+    game: getNewGame(this.props.dimensions),
+    isStartState: true,
+    counting: false
   }
 
+  // ? private member, good practice?
   private itemWidth: number = this.props.itemWidth || 80;
   private gamePanelStyle: React.CSSProperties;
   private freezing = false;
-  // private boardRef: React.RefObject<HTMLDivElement>;
+  private lastFinishTime: number | void = undefined;
 
   public constructor(props: Props) {
     super(props);
@@ -33,11 +43,12 @@ class GameComponent extends React.Component<Props, State> {
     this.gamePanelStyle = {
       height: size
     }
-    this.handleGameBoardChagne = this.handleGameBoardChagne.bind(this);
+    this.handleGameBoardChange = this.handleGameBoardChange.bind(this);
     this.resetGame = this.resetGame.bind(this);
     this.handleClickCapture = this.handleClickCapture.bind(this);
     this.freeze = this.freeze.bind(this);
     this.thaw = this.thaw.bind(this);
+    this.setTimeDelegate = this.setTimeDelegate.bind(this);
   }
 
   public handleClickCapture(e: React.MouseEvent<HTMLDivElement>) {
@@ -48,17 +59,26 @@ class GameComponent extends React.Component<Props, State> {
     }
   }
 
-  public handleGameBoardChagne(callback: () => void) {
-    // ? tricky workflow
-    this.setState(this.state, () => {
-      console.log('setState() finished');
-      // !bug: callback invoked before re-rendering
-      if (this.state.game.board.isFinished()) {
-        alert('Congrad! you finisehd');
-      }
-      callback();
-    });
-    // console.log(this.state.game.board.tiles);
+  // ! bad smell for using callback (prev)
+  public handleGameBoardChange(): Promise<void> {
+    const finisehd = this.state.game.board.isFinished();
+    console.log('handleGameBoardChange called')
+
+    return new Promise((resolve) => {
+      this.setState({
+        ...this.state,
+        isStartState: false,
+        counting: !finisehd
+      }, () => { // ? tricky workflow
+        console.log('setState() finished');
+        // !bug: callback invoked before re-rendering
+        if (finisehd) {
+          alert('Congrad! you finisehd');
+          console.log(`finshed time ${this.lastFinishTime}`)
+        }
+        resolve();
+      });
+    })
   }
 
   public render() {
@@ -68,12 +88,17 @@ class GameComponent extends React.Component<Props, State> {
         <div className="title row">
           <p className="center">{dimensions * dimensions - 1}-puzzle </p>
         </div>
+        <div className="row center">
+          <Timer counting={this.state.counting}
+            setTime={this.setTimeDelegate} 
+            startFromBegining={true}/>
+        </div>
         <div onClickCapture={this.handleClickCapture}
           style={this.gamePanelStyle} className="game-board-panel row">
           <BoardComponent
             board={this.state.game.board}
             itemWidth={this.itemWidth}
-            onChange={this.handleGameBoardChagne}
+            onChange={this.handleGameBoardChange}
             freeze={this.freeze}
             thaw={this.thaw} />
         </div>
@@ -81,12 +106,12 @@ class GameComponent extends React.Component<Props, State> {
           {/* TODO: animation for match changes */}
 
           <div className="control-panel row center">
-            <div className="col s6">
-              <div className="card-panel lime darken-2 col s8 offset-s2">
+            <div className="col s12 m6 l6">
+              <div className="card-panel lime darken-2 col s8 m8 l8 offset-s2 offset-m2 offset-l2">
                 <i className="material-icons inline-icon">change_history</i> matched tiles: {this.state.game.board.matchedPlaces}
               </div>
             </div>
-            <div className="col s6">
+            <div className="col s12 m6 l6">
               <button className="waves-effect lime darken-4 btn" onClick={this.resetGame}>New Game</button>
             </div>
           </div>
@@ -117,18 +142,18 @@ class GameComponent extends React.Component<Props, State> {
     Promise.all(forward.map((func) => func()))
       .then(() => {
         // 2. set state
-        this.setState(this.state, () => {
+        this.setState({
+          ...this.state,
+          isStartState: true,
+          counting: false
+        }, () => {
           // 3. reverse animation
-          console.log('reversing');
           Promise.all(reverse.map((func) => func()))
             .then(() => {
-              console.log('reverse completed')
               this.thaw()
             })
         })
       });
-
-    // this.setState(this.state);
   }
 
   private freeze() {
@@ -139,6 +164,10 @@ class GameComponent extends React.Component<Props, State> {
   private thaw() {
     this.freezing = false;
     // console.log('board activated (un-freezed)');
+  }
+
+  private setTimeDelegate(time: number) {
+    this.lastFinishTime = time;
   }
 }
 

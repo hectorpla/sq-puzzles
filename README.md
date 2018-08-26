@@ -4,6 +4,8 @@
 - [x] animation bug: fast move on mobile (solved by freeze + anime.js)
 - [x] 15-puzzle in mobile size: bad layout; slow
 - [] slow response after changing size of the game
+- [] memory leak? over new game operations!
+- [0] the above two, same issue -> width of the screen (meta: user-sccalable=no), didn't work on tablet sizes
 
 # tasks
 - [x] type move.js (deprecated in this project)
@@ -12,6 +14,7 @@
 - [x] deploy on Heroku
 - [] timer and animation
 - [] finish animation
+- [] score board
 
 ## some peripheral goals
 - [x] animation for new game
